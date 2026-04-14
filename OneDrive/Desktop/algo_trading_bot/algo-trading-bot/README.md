@@ -2,19 +2,24 @@
 
 ## Vercel deployment
 
-The React frontend is Vercel-ready. The FastAPI backend is also exposed as a Vercel Python function through `api/index.py`, so the whole repo can be deployed from one Vercel project.
+The safest Vercel setup for this repo is two projects:
+
+1. A frontend project with the root set to `frontend`.
+2. A backend project with the root set to `backend`.
+
+The monorepo root still contains Vercel config for the combined setup, but if you are seeing a Vercel 404, it usually means the project was imported from the wrong folder or Vercel is serving the wrong root.
 
 ### Frontend
 
-1. Set the Vercel project root to `frontend` or use the root `vercel.json` in this repo.
-2. Set `VITE_API_BASE_URL` in Vercel only if you want to override the default same-origin `/api` path.
-3. Run the frontend build with `npm run build` from `frontend`.
+1. Set the Vercel project root to `frontend`.
+2. Use the frontend-specific [frontend/vercel.json](frontend/vercel.json) for the build and SPA fallback.
+3. Set `VITE_API_BASE_URL` in Vercel to the backend URL if the backend is deployed separately.
 
 ### Backend
 
-1. Vercel loads the FastAPI app from `api/index.py`, which imports the existing backend app.
-2. The backend dependencies live in the root `requirements.txt` so Vercel can detect them.
-3. The trained model file under `backend/bot/` is excluded from function bundling.
+1. Set the Vercel project root to `backend` if you want the FastAPI app deployed separately.
+2. The backend app is defined in [backend/main.py](backend/main.py).
+3. The trained model file under `backend/bot/` is excluded from function bundling in the root Vercel config.
 
 ### Local development
 
